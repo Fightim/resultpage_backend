@@ -1,5 +1,3 @@
-
-
 const axios = require('axios');
 const mysql = require('mysql');
 const express = require("express");
