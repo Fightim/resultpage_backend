@@ -9,26 +9,28 @@ app.use(bodyParser.urlencoded({extended:true}));
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: false }));
 
-app.use(cors({
-    origin: "http://52.79.253.178",
-    credentials: true,
-  }));
+app.use(cors());
 
 // 이름 받아오기
 app.get('/text/:name', (req, res) => {
     var name = req.params.name
     console.log(req.params.name)
-    axios.get('http://15.164.222.12/')
+    axios.get('http://3.39.194.196/')
     .then(function (response) {
+	console.log(response.data);
         const connection = mysql.createConnection({
             multipleStatements: true,
             host : response.data.host,
-            user : response.data.username,
+            user : response.data.user,
             password : response.data.password
         });
+console.log("before query");
 
         connection.query("CREATE DATABASE IF NOT EXISTS my_db CHARACTER SET UTF8; USE my_db; CREATE TABLE IF NOT EXISTS result(id INT UNSIGNED NOT NULL AUTO_INCREMENT, name VARCHAR(100) NULL, input_text TEXT NOT NULL, input_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL, endpoint TEXT NOT NULL, PRIMARY KEY(id)); SELECT * FROM result WHERE name=?;",[name], function(err, result){
+console.log("result : ", result);
             if(err){
+console.log("here");
+console.log(err);
                 return res.status(404).json({
                     "error": {
                         "type": "NOT_FOUND",
@@ -36,7 +38,8 @@ app.get('/text/:name', (req, res) => {
                     }
                 })
             }
-            else if(result.length ==  0){
+            else if(result[3].length ==  0){
+console.log("here2");
                 return res.status(404).json({
                     "error": {
                         "type": "NOT_FOUND",
@@ -45,7 +48,7 @@ app.get('/text/:name', (req, res) => {
                 })
             }
             else{
-                return res.status(200).send(result)
+                return res.status(200).send(result[3])
             }
 
         });
@@ -62,12 +65,12 @@ app.post('/text', (req, res) => {
     var name = req.body.name;
     var text = req.body.text;
     console.log(name,text)
-    axios.get('http://15.164.222.12/')
+    axios.get('http://3.39.194.196/')
     .then(function (response) {
         const connection = mysql.createConnection({
             multipleStatements: true,
             host : response.data.host,
-            user : response.data.username,
+            user : response.data.user,
             password : response.data.password
         });
 
@@ -82,8 +85,9 @@ app.post('/text', (req, res) => {
                 })
             }
             else{
-                connection.query('SELECT * FROM result WHERE id = (SELECT max(id) FROM result)',function(err2, result){
+                connection.query("SELECT * FROM result WHERE id = (SELECT MAX(id) FROM result)",function(err2, result){
                     if(err2){
+			console.log(err2)
                         res.status(404).json({
                             "error": {
                                 "type": "NOT_FOUND",
@@ -92,6 +96,7 @@ app.post('/text', (req, res) => {
                         })
                     }
                     else{
+			console.log(result)
                         res.status(200).send(result)
     
                     }
