@@ -11,6 +11,35 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use(cors());
 
+//db정보 확
+app.get('/db', (req, res) => {
+    axios.get('http://3.39.194.196/')
+    .then(function (response) {
+        const connection = mysql.createConnection({
+            host : response.data.host,
+            user : response.data.user,
+            password : response.data.password
+        });
+        connection.connect(function (err,result){
+            if (err){
+                return res.status(404).json({
+                    "error": {
+                        "type": "NOT_FOUND",
+                        "message": "no database server"
+                    }
+                })
+
+            }
+            else{
+                return res.status(200).json({
+                    "message": "DB server exist"
+                })
+            }
+
+        });  
+    });
+});
+
 // 이름 받아오기
 app.get('/text/:name', (req, res) => {
     var name = req.params.name
