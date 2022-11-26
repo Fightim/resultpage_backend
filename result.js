@@ -11,10 +11,13 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use(cors());
 
-//db정보 확
+//db 상태 확인ㅑ
 app.get('/db', (req, res) => {
-    axios.get('http://3.39.194.196/')
+    let token = req.headers.Authorization;
+    global.token = token;
+    axios.get('http://3.39.194.196/',{headers:{Token:token}})
     .then(function (response) {
+	console.log(token)
         const connection = mysql.createConnection({
             host : response.data.host,
             user : response.data.user,
@@ -42,9 +45,10 @@ app.get('/db', (req, res) => {
 
 // 이름 받아오기
 app.get('/text/:name', (req, res) => {
-    var name = req.params.name
+    let name = req.params.name
+    console.log(token);
     console.log(req.params.name)
-    axios.get('http://3.39.194.196/')
+    axios.get('http://3.39.194.196/',{headers:{Token:token}})
     .then(function (response) {
 	console.log(response.data);
         const connection = mysql.createConnection({
@@ -91,10 +95,10 @@ console.log("here2");
 
 // 이름 및 텍스트 등록
 app.post('/text', (req, res) => {
-    var name = req.body.name;
-    var text = req.body.text;
+    let name = req.body.name;
+    let text = req.body.text;
     console.log(name,text)
-    axios.get('http://3.39.194.196/')
+    axios.get('http://3.39.194.196/',{headers:{Token:token}})
     .then(function (response) {
         const connection = mysql.createConnection({
             multipleStatements: true,
