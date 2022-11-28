@@ -13,7 +13,7 @@ app.use(cors());
 
 //db 상태 확인ㅑ
 app.get('/db', (req, res) => {
-    let token = req.headers.Authorization;
+    let token = req.headers.authorization;
     global.token = token;
     axios.get('http://3.39.194.196/',{headers:{Token:token}})
     .then(function (response) {
