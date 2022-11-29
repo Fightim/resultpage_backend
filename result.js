@@ -15,9 +15,9 @@ app.use(cors());
 app.get('/db', (req, res) => {
     let token = req.headers.authorization;
     global.token = token;
-    axios.get('http://3.39.194.196/',{headers:{Token:token}})
+    console.log(token);
+    axios.get('https://dev.cloud-gui.com/rds/config',{headers:{Authorization: token}})
     .then(function (response) {
-	console.log(token)
         const connection = mysql.createConnection({
             host : response.data.host,
             user : response.data.user,
@@ -48,7 +48,7 @@ app.get('/text/:name', (req, res) => {
     let name = req.params.name
     console.log(token);
     console.log(req.params.name)
-    axios.get('http://3.39.194.196/',{headers:{Token:token}})
+    axios.get('https://dev.cloud-gui.com/rds/config',{headers:{Authorization:token}})
     .then(function (response) {
 	console.log(response.data);
         const connection = mysql.createConnection({
@@ -98,7 +98,7 @@ app.post('/text', (req, res) => {
     let name = req.body.name;
     let text = req.body.text;
     console.log(name,text)
-    axios.get('http://3.39.194.196/',{headers:{Token:token}})
+    axios.get('https://dev.cloud-gui.com/rds/config',{headers:{Authorization:token}})
     .then(function (response) {
         const connection = mysql.createConnection({
             multipleStatements: true,
