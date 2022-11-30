@@ -1,4 +1,4 @@
-const ㅑaxios = require('axios');
+const axios = require('axios');
 const mysql = require('mysql');
 const express = require("express");
 const app = express();
