@@ -1,4 +1,4 @@
-const axios = require('axios');
+const ㅑaxios = require('axios');
 const mysql = require('mysql');
 const express = require("express");
 const app = express();
@@ -39,7 +39,10 @@ app.get('/db', (req, res) => {
                 })
             }
 
-        });  
+        });
+    })
+    .catch(function (error) {
+        console.log(error);
     });
 });
 
